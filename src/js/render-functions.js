@@ -1,63 +1,59 @@
-import SimpleLightbox from 'simplelightbox';
-import 'simplelightbox/dist/simple-lightbox.min.css';
+import SimpleLightbox from "simplelightbox";
+import "simplelightbox/dist/simple-lightbox.min.css";
 
-const galleryContainer = document.querySelector('.gallery');
-const loader = document.querySelector('.loader');
+const galleryContainer = document.querySelector(".gallery");
+const loader = document.querySelector(".loader");
+const loadMoreBtn = document.querySelector(".load-more");
 
-export const lightbox = new SimpleLightbox('.gallery a', {
-  captionsData: 'alt',
+
+const lightbox = new SimpleLightbox(".gallery a", {
+  captionsData: "alt",
   captionDelay: 250,
 });
+
 
 
 export function createGallery(images) {
   const markup = images
     .map(
       img => `
+    <a class="gallery-item" href="${img.largeImageURL}">
       <div class="photo-card">
-        <a class="gallery-item" href="${img.largeImageURL}">
-          <img src="${img.webformatURL}" alt="${img.tags}" />
-        </a>
+        <img src="${img.webformatURL}" alt="${img.tags}" />
+
         <div class="info">
-          <div class="info-item">
-            <b>Likes</b>
-            <span>${img.likes}</span>
-          </div>
-          <div class="info-item">
-            <b>Views</b>
-            <span>${img.views}</span>
-          </div>
-          <div class="info-item">
-            <b>Comments</b>
-            <span>${img.comments}</span>
-          </div>
-          <div class="info-item">
-            <b>Downloads</b>
-            <span>${img.downloads}</span>
-          </div>
+          <p class="info-item"><b>Likes</b> ${img.likes}</p>
+          <p class="info-item"><b>Views</b> ${img.views}</p>
+          <p class="info-item"><b>Comments</b> ${img.comments}</p>
+          <p class="info-item"><b>Downloads</b> ${img.downloads}</p>
         </div>
       </div>
-      `
+    </a>
+  `
     )
-    .join('');
+    .join("");
 
-  galleryContainer.insertAdjacentHTML('beforeend', markup);
+  galleryContainer.insertAdjacentHTML("beforeend", markup);
 
   lightbox.refresh();
 }
 
-
 export function clearGallery() {
-  galleryContainer.innerHTML = '';
+  galleryContainer.innerHTML = "";
 }
 
-
-
-
 export function showLoader() {
-  loader.classList.add('show');
+  loader.classList.add("show");
 }
 
 export function hideLoader() {
-  loader.classList.remove('show');
+  loader.classList.remove("show");
+}
+
+export function showLoadMoreButton() {
+  loadMoreBtn.classList.add("show");
+}
+
+export function hideLoadMoreButton() {
+  loadMoreBtn.classList.remove("show");
 }
