@@ -18,7 +18,7 @@ let currentQuery = "";
 let page = 1;
 let totalHits = 0;
 
-form.addEventListener("submit", async e => {
+form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const query = e.target.elements["search-text"].value.trim();
@@ -31,7 +31,7 @@ form.addEventListener("submit", async e => {
     return;
   }
 
-  
+  // Новий пошук
   currentQuery = query;
   page = 1;
 
@@ -53,12 +53,10 @@ form.addEventListener("submit", async e => {
 
     createGallery(data.hits);
 
-    
     if (page * 15 < totalHits) {
       showLoadMoreButton();
     }
-
-  } catch {
+  } catch (error) {
     iziToast.error({
       message: "Something went wrong. Try again later!",
       position: "topRight",
@@ -70,27 +68,35 @@ form.addEventListener("submit", async e => {
 
 loadMoreBtn.addEventListener("click", async () => {
   page += 1;
-
   showLoader();
   hideLoadMoreButton();
 
   try {
     const data = await getImagesByQuery(currentQuery, page);
-
     createGallery(data.hits);
 
-    const totalLoaded = page * 15;
+    if (data.hits.length > 0) {
+      const { height: cardHeight } = document
+        .querySelector(".gallery")
+        .firstElementChild.getBoundingClientRect();
 
-    if (totalLoaded >= totalHits) {
+      window.scrollBy({
+        top: cardHeight * 2,
+        behavior: "smooth",
+      });
+    }
+
+    const totalPages = Math.ceil(totalHits / 15);
+    if (page >= totalPages) {
+      hideLoadMoreButton();
       iziToast.info({
         message: "We're sorry, but you've reached the end of search results.",
         position: "topRight",
       });
-      hideLoadMoreButton();
     } else {
       showLoadMoreButton();
     }
-  } catch {
+  } catch (error) {
     iziToast.error({
       message: "Error loading more images.",
       position: "topRight",
